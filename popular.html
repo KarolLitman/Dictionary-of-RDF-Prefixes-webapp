@@ -1,0 +1,67 @@
+<div vocab="http://schema.org/" typeof="ItemList">
+    <h2 property="name">Popular prefixes</h2>
+<ol class="popular"></ol>
+</div>
+
+<script>
+
+  var page = document.URL.substring(document.URL.lastIndexOf("?page=") + 6, document.URL.length);
+var numberingfrom;
+
+
+
+if($.isNumeric( page )){
+    numberingfrom=page*5-4;
+ page='&page='+page 
+}
+else{
+    numberingfrom=1;
+  page=''
+}
+
+    $(".popular").attr("start",numberingfrom);
+
+
+
+    var url = $.ajax("https://prefix.chemskos.com/api/?/popular"+page).done(function(data) {
+        var result=''
+        console.log(data['@graph'])
+
+var pagination = data['@graph'][data['@graph'].length-2]
+
+          if (data['@graph'].length > 2) {
+            data['@graph'].splice(-2,2)
+}
+
+
+if (data['@graph'].length > 0) {
+    var i=0;
+  $.each(data['@graph'] , function( index, value ) {
+      i++;
+// console.log(value)
+               result += '<li property="itemListElement" typeof="ListItem"><a href="/#!/'+value['pres:prefix']+'" property="item">'+ value['pres:prefix'] +'</a> <span class="score">'+value['pres:score']+'</span><meta property="position" content="'+parseInt(numberingfrom+i)+'"></li>'
+});
+result+='<br>';
+if (pagination['hydra:previous']!=null)
+{
+  var previous = pagination['hydra:previous'].substring(pagination['hydra:previous'].lastIndexOf("&page=") + 6, pagination['hydra:previous'].length);
+
+        result +='<a href="/#!/popular?page='+previous+'">&lt;&lt;</a> '
+}       
+if (pagination['hydra:next']!=null)
+{
+  var next = pagination['hydra:next'].substring(pagination['hydra:next'].lastIndexOf("&page=") + 6, pagination['hydra:next'].length);
+  // console.log(next)
+
+        result +='<a href="/#!/popular?page='+next+'">&gt;&gt;</a>'
+}
+        
+        } else {
+           result += "Nie znaleziono"
+}
+//  console.log(result)
+$( ".popular" ).html(result)
+}
+      )
+</script>
+

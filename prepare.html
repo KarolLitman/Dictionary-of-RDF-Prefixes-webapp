@@ -1,0 +1,174 @@
+<h2>Prepare document</h2>
+<script>
+
+
+
+
+
+  var doUploadLocal = function(){
+    var input = $( "#fileToUpload" )[0];
+    var form = new FormData();
+form.append("file", input.files[0]);
+
+
+
+var extension = $('#choosedformat').val()
+
+switch (extension) {
+    case 'jsonld':
+        mediatype = "application/ld+json";
+        break;
+    case 'nt':
+        mediatype = "application/n-triples";
+        break;
+    case 'rdf':
+        mediatype = "application/rdf+xml";
+        break;
+    case 'ttl':
+        mediatype = "text/turtle";
+        break;
+}
+
+ $.ajax({
+
+  async: true,
+  crossDomain: true,
+  url: "https://prefix.chemskos.com/api/?/prepare",
+  method: "POST",
+  headers: {
+    "accept": mediatype,
+    "cache-control": "no-cache",
+  },
+  statusCode: {
+        200: function (data, textStatus, request) {
+            var filename = $('input[type=file]').val().split('\\').pop().split('.')[0]+'.'+extension;
+  download(data, filename, mediatype);
+        },
+        406: function (data, textStatus, request) {
+            alert("At least of one prefix was not found")
+        },
+  }
+  ,
+  processData: false,
+  contentType: false,
+  mimeType: "multipart/form-data",
+  data: form
+})
+
+}
+
+</script>
+
+<!-- <form action="upload.php" method="post" enctype="multipart/form-data"> -->
+  <label for="browse">Select Turtle document to upload</label><br>
+  <input type="file" class="btn-choose" name="fileToUpload" id="fileToUpload" accept=".ttl" >
+  <br><div class="file-container2">
+      <label for="choosedformat">Choose output format</label>
+      <div class="custom-select">
+  <select id="choosedformat">
+        <option></option>
+        <option value="ttl" selected>Turtle</option>
+
+    <option value="jsonld">JSON-LD</option>
+      <option value="nt">N-Triples</option>
+      <option value="rdf">RDF/XML</option>
+    </select></div><br>
+    <button value="Upload" class="btn-upload" onclick="doUploadLocal()">Upload</button>
+  </div>
+<!-- </form> -->
+
+
+<script>
+  $(function() {
+	$('input[type=file]').each(function(){
+		var $this = $(this);
+    console.log($this);
+		var labeltext = ($this.attr('title')!='' && $this.attr('title')!=undefined)?$(this).attr('title'):'Browse';
+
+		var $fileContainer = $('<div class="file-container" />');
+
+		var $text_file = $('<input type="text" class="input-text" value="No file selected." />');
+		var $uploadbutton = $('<input id="browse" class="input-browse" type="button" value="'+labeltext+'" />');
+		$this.wrap($fileContainer);			
+		$this.parents('.file-container').append($uploadbutton).append($text_file);	
+		$this.bind('change', function() {
+			$this.parent().find('.input-text').val($this.val().replace("C:\\fakepath\\", ""));
+		});
+	});
+})
+
+
+var x, i, j, selElmnt, a, b, c;
+/*look for any elements with the class "custom-select":*/
+x = document.getElementsByClassName("custom-select");
+for (i = 0; i < x.length; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  /*for each element, create a new DIV that will act as the selected item:*/
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /*for each element, create a new DIV that will contain the option list:*/
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < selElmnt.length; j++) {
+    /*for each option in the original select element,
+    create a new DIV that will act as an option item:*/
+    c = document.createElement("DIV");
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /*when an item is clicked, update the original select box,
+        and the selected item:*/
+        var y, i, k, s, h;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        h = this.parentNode.previousSibling;
+        for (i = 0; i < s.length; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            for (k = 0; k < y.length; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+      /*when the select box is clicked, close any other select boxes,
+      and open/close the current select box:*/
+      e.stopPropagation();
+      closeAllSelect(this);
+      this.nextSibling.classList.toggle("select-hide");
+      this.classList.toggle("select-arrow-active");
+  });
+}
+function closeAllSelect(elmnt) {
+  /*a function that will close all select boxes in the document,
+  except the current select box:*/
+  var x, y, i, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  for (i = 0; i < y.length; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < x.length; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+/*if the user clicks anywhere outside the select box,
+then close all select boxes:*/
+document.addEventListener("click", closeAllSelect);
+
+</script>

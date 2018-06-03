@@ -1,0 +1,347 @@
+header,nav {
+  display:inline-block;
+}
+
+
+header{
+  flex-grow: 1;
+}
+nav{
+  flex-grow: 2;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+nav{
+  padding-top: 5px;
+}
+
+#login{
+  flex-grow: 1;
+}
+
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #eeeeee;
+  font-size: 18px;
+    font-weight: 200;
+    line-height: 27px;
+    color: inherit;
+}
+
+header{
+  color: #333333;
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+placeholder {
+  font-style: italic;  
+}
+
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+article{
+  text-align: center;
+  display: table;
+  position: absolute;
+  height: 70%;
+  width: 100%;
+}
+
+.search{
+
+  width:300px;
+height:50px;
+font-size:16pt;
+}
+
+input,.select-selected{
+  padding:10px;
+  background: #fff;
+  border: 1px solid #a9a9a9;
+}
+
+
+
+button,input[type=button],input[type=submit] {
+  background-color: #333333;
+  color: #eeeeee;
+  cursor:pointer;
+  border: 0;
+  top:-5px;
+}
+
+
+
+.btn-upload{
+    padding:10px;
+    float: right;
+}
+
+
+ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 10%;
+  /* text-align: left; */
+}
+
+.popular{
+  text-align: center;
+  list-style-position: inside;
+  padding:0;
+  height:300px;
+}
+.bar{
+  display: flex;
+  padding: 2% 5%;
+}
+
+.login-bar{
+  display:inline-block;
+}
+
+#app{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.list-login>li>button{
+  width: 400px;
+  height: 70px;
+  color: #ffffff;
+  border: 0;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-google{
+  background-color: #db4c3f;
+}
+
+
+.btn-github{
+  background-color: #444444;
+}
+.btn-facebook{
+  background-color: #3b5998;
+}
+.btn-reddit{
+  background-color: #FF4500;
+}
+
+
+.result li button{
+    width: 20px;
+    height: 20px;
+    border: 0px;
+    color: #fff;
+    font-weight: 900;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    padding:0px;
+    /* opacity:0.5; */
+}
+.result>li>button:hover{
+  opacity:1;
+}
+
+.plus{
+    background-color: #27ae60;
+    opacity:0.5;
+}
+.plus.clicked,.minus.clicked{
+  opacity:1;
+}
+
+.minus{
+  background-color: #c0392b;
+      opacity:0.5;
+
+}
+.blocked, .blockedall{
+  display: none;
+}
+
+
+
+#addnamespace{
+  display:block;
+  margin-top:20px;
+}
+
+#addnamespace a{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#formats{
+  margin-top:2%;
+}
+#formats li{
+    display: inline-block;
+    padding-right: 2%;
+}
+
+.score{
+    color: #888888;
+    font-size: 12px;
+}
+
+
+.file-container {width:325px; height:35px; margin-top:30px; display:inline-block; position:relative; overflow:hidden;}
+.file-container2 {width: 324px; display:inline-block; margin-top:10px;}
+
+/* input file dostaje z-index:2, oraz pozycjonowanie absolutne */
+.file-container input[type="file"] {
+    position:absolute;
+    opacity:0;
+    z-index:2;
+    cursor:pointer;
+padding:0;
+width:322px;
+left:0;
+right:0;
+top:0;
+bottom:0;}
+ 
+/* a input text i button dostają mniejszy z-index dzięki czemu znajdują się pod "niewidzialnym" input file */
+.file-container input[type="text"] {
+  float:left;
+  z-index:0;
+  width:221px;
+  position:relative;
+height:13px;}
+.file-container input[type="button"] {float:left;
+  width:70px;
+  margin-right: 10px;
+  /* height:30px; */
+  background-color: #333333;
+  /* text-align:center; */
+  /* font:11px Arial; */
+  /* color:#fff; */
+  /* line-height:30px; */
+  overflow:hidden;
+  display:block;
+  border:0;
+  cursor:pointer;
+  z-index:0;
+  /* position:relative; */
+}
+
+.chooseformat{
+  width: 140px;
+  height: 35px;
+}
+
+
+.custom-select {
+    position: relative;
+    font-family: Arial;
+    margin-top: 20px;
+  }
+  .custom-select select {
+    display: none; /*hide original SELECT element:*/
+  }
+
+  /*style the arrow inside the select element:*/
+  .select-selected:after {
+    position: absolute;
+    content: "";
+    top: 18px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #333 transparent transparent transparent;
+  }
+  /*point the arrow upwards when the select box is open (active):*/
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #333 transparent;
+    top: 12px;
+  }
+  /*style the items (options), including the selected item:*/
+  .select-items div,.select-selected {
+    padding: 8px 16px;
+    border-bottom: 1px solid #a9a9a9;
+    border-left: 1px solid #a9a9a9;
+    border-right: 1px solid #a9a9a9;
+    cursor: pointer;
+  }
+  /*style items (options):*/
+  .select-items {
+    position: absolute;
+    background-color: #fff;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+  /*hide the items when the select box is closed:*/
+  .select-hide {
+    display: none;
+  }
+  .select-items div:hover, .same-as-selected {
+    background: #333;
+    color:#fff;
+
+  }
+
+  .score{
+    background: #333;
+    padding: 5px;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+
+@media screen and (max-width: 1000px) {
+    header, nav ul li, .login-bar {
+      width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+      margin-bottom:8%;
+    }
+    .bar{
+        display: block;
+        text-align: center;
+    }
+    nav ul{
+        text-align: center;
+        list-style-position: inside;
+    }
+    article{
+        height:40%;
+    }
+    .list-login>li>button{
+        width:100%;
+        margin:5px 0;
+    }
+    #formats li{
+        width:40%;
+        margin:2.5% 0%;
+    }
+
+    .result>li, .popular>li{
+        margin-bottom:5%;
+    }
+
+    .result>li>button{
+        margin: 0% 1%;
+  }
+}
+

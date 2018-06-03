@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+    <head vocab="http://schema.org/" typeof="WebPage">
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title property="name">Dictionary of RDF Prefixes</title>
+    <meta property="description" content="namespace lookup for RDF developers">
+    <meta property="author" content="Karol Litman">
+    <meta property="application" content="Dictionary of RDF Prefixes">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
+  <!-- <script type="text/javascript" src="js/jquery.routes.js"></script> -->
+  <script type="text/javascript" src="js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="js/download2.js"></script>
+  <script type="text/javascript" src="js/director.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script type="text/javascript">
+
+
+var loginbtn = '<input type="button" id="login" onclick="login()" value="Sign in to get permission"></div>'
+
+
+$(function() {
+	var search = function () { 
+        // Load your content using AJAX
+        $("#app").load("main.html");
+    };
+    var login = function () { 
+        // Load your content using AJAX
+        $("#app").load("login.html");
+    };
+    var result = function (name) {
+        $("#app").load("result.html?name=" + name);
+    };
+    var popular = function () {
+        $("#app").load("popular.html");
+    };
+
+    var prepare = function () {
+        $("#app").load("prepare.html");
+    };
+
+    var routes = {
+        '/': search,
+        '/login': login,
+        '/popular': popular,
+        '/prepare' : prepare,
+        '/:name': result
+    };
+
+    var router = Router(routes);
+	router.init();
+});
+
+
+$( document ).ready(function() {
+$( "#btn-search" ).click(function() {
+    document.location.replace('#!/' + $( "#txt-search" ).val());
+});
+
+
+
+
+if ($.cookie('access-token') != null && $.cookie('server') != null){
+    $('.login-bar').html('<input type="button" id="logout" onclick="logout()" value="Logout">');
+    }
+    else{
+        $('.login-bar').html(loginbtn);
+    }
+});
+
+function logout() { 
+    $.removeCookie('access-token', { path: '/' });
+    $.removeCookie('server', { path: '/' });
+    $('.login-bar').html(loginbtn);
+ };
+function login(){
+    document.location.replace('#!/login');
+}
+
+
+//  $(document).on('click', '#btn-search', function() { 		stop(1000);
+// window.location.hash='#/result/' + $( "#txt-search" ).val() });
+
+
+// 	$.routes.add('/result/{name:string}/', function() {
+// 		$('#app').load('result.html?name=' + this.name).show();
+//     // alert('result.html?name=' + this.name)
+// 	});
+
+
+
+// let params = (new URL(document.URL)).searchParams;
+
+// $( document ).ready(function() {
+// switch(params.get('site')) {
+//     case 'login':
+//         $('#app').load('login.html');
+//         break;
+//     case 'prefix':
+//         $('#app').load('result.html?name=' + this.name).show();
+//         break;
+//     default:
+//         $('#app').load('glowna.html');
+// }
+// })
+
+// $(window).on('hashchange', function (e) {
+//     if(window.location.hash=='#popular')
+//     {
+//      $('#app').load( 'popular.html' );
+//     }
+//     else if(window.location.hash=='#login')
+//     {
+//      $('#app').load( 'login.html' );
+//     }
+//     else if(window.location.hash=='#result')
+//     {
+//      $('#app').load( 'result.html' );
+//      alert("dziala")
+
+//     }
+// });
+
+// if (window.location.hash) {
+//     $(window).trigger('hashchange')
+// }
+
+
+
+        </script>
+
+</head>
+
+<body>
+
+
+
+  <div class="bar"><header>Dictionary of RDF Prefixes</header><nav><ul><li><a href="/#!">Home</a></li><li><a href="#!/popular">Popular</a></li><li><a href="#!/prepare">Prepare document</a></li></ul></nav><div class="login-bar"></div></div>
+
+<article>
+  <div id="app">
+        <h2>Enter prefix</h2>
+          <input type="search" class="search" name="prefix" id="txt-search">
+
+          <input type="button" class="search" id="btn-search" value="Submit">   
+    </div>
+</article>
+
+
+
+</body>
+
+</html>

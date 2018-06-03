@@ -1,0 +1,11 @@
+<h2>Enter prefix</h2>
+<input type="search" class="search" name="prefix" value="foaf" id="txt-search">
+
+<input type="button" class="search" id="btn-search" value="Submit"> 
+
+
+<script>
+    $( "#btn-search" ).click(function() {
+    document.location.replace('#/' + $( "#txt-search" ).val());
+});
+</script>

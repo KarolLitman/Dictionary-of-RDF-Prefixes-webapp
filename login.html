@@ -1,0 +1,25 @@
+
+<h2>Login with:</h2>
+<ul class="list-login">
+    <li><button class="btn-google">Google +</button></li>
+    <li><button class="btn-facebook">Facebook</button></li>
+    <li><button class="btn-github">Github</button></li>
+    <li><button class="btn-reddit">Reddit</button></li>
+
+  </ul>
+
+  <script>
+$( ".btn-google" ).click(function() {
+    document.location.replace('api/login/google');
+});
+$( ".btn-facebook" ).click(function() {
+    document.location.replace('api/login/facebook');
+});
+$( ".btn-github" ).click(function() {
+    document.location.replace('api/login/github');
+});
+$( ".btn-reddit" ).click(function() {
+    document.location.replace('api/login/reddit');
+});
+
+</script>

@@ -1,0 +1,256 @@
+<script>
+  var last = document.URL.substring(document.URL.lastIndexOf("/") + 1, document.URL.length);
+  var result = '<h2>' + last + '</h2><ul class="result">';
+
+    var blockedpluses=false;
+
+  function showform() {
+    $("#addnamespace").html('<h3>Enter namespace</h3><input type="search" class="search" name="prefix" placeholder="http://url.com/" id="txt-namespace"> <input type="button" onclick="addnamespace();" class="search" id="btn-search" value="Add">')
+  }
+
+
+  function vote() {
+
+
+    if ($.cookie('access-token') == null && $.cookie('server') == null) {
+      alert("You can not vote because you are not logged in.")
+    }
+    else {
+
+    if ($(this).hasClass("plus clicked")) {
+        methodHTTP = "DELETE"
+        type='plus'
+      }
+     else if ($(this).hasClass("minus clicked")) {
+        methodHTTP = "DELETE"
+        type='minus'
+      }
+      else if ($(this).hasClass("plus")) {
+        methodHTTP = "POST"
+        type='plus'
+      }
+
+      else if ($(this).hasClass("minus")) {
+        methodHTTP = "POST"
+        type='minus'
+      }
+ 
+
+      var choosed = this
+      console.log(choosed)
+
+      $.ajax({
+        method: methodHTTP,
+        data: JSON.stringify({ type: type }),
+        statusCode: {
+        201: function (msg) {
+          $(choosed).addClass( "clicked" );
+          if (type=="plus"){
+            $(".plus").not('.clicked').addClass( "blockedall" );
+            blockedpluses=true;
+            $('*[data-value="' + $(choosed).attr("data-value") + '"].minus').hide();
+            }
+            else{
+              // $('*[data-value="' + $(choosed).attr("data-value") + '"].plus').hide();
+              $('*[data-value="' + $(choosed).attr("data-value") + '"].plus').addClass( "blocked" );
+
+            }
+                        },
+        200: function () {
+
+
+          if (type=="plus"){
+            $(choosed).removeClass( "clicked" )
+            $(".plus").removeClass( "blockedall" )
+            blockedpluses=false;
+            $('*[data-value="' + $(choosed).attr("data-value") + '"].minus').show();
+            }
+            else{
+            $(choosed).removeClass( "clicked" )
+            //   if (!$(".clickedplus")[0]){
+              // $('*[data-value="' + $(choosed).attr("data-value") + '"].blockedplus').show();
+              $('*[data-value="' + $(choosed).attr("data-value") + '"].blocked').removeClass( "blocked" );
+
+// }
+            }
+
+
+
+            
+            }
+            
+            
+            },
+        url: "https://prefix.chemskos.com/api/?/" + $(this).attr("data-value"),
+        headers: {
+          'Authorization': 'Bearer ' + $.cookie('access-token'),
+          'Server': $.cookie('server')
+        }
+      })
+
+
+    }
+
+  };
+
+
+  function addnamespace() {
+    if ($.cookie('access-token') == null && $.cookie('server') == null) {
+      alert("You must be logged in to add namespace.")
+    }
+    else{
+    $.ajax({
+      method: "POST",
+      statusCode: {
+        409: function () {
+          alert("Namespace already exists");
+        },
+        201: function () {
+
+          if(blockedpluses==true){
+            var addclass='blockedall'
+          }
+          else{
+            var addclass=''
+          }
+          $(".result").append("<li>" + $("#txt-namespace").val() + " <button data-value=" + $("#txt-namespace").val() + ' class="plus '+addclass+'">+</button> <button data-value="' + $("#txt-namespace").val() + '" class="minus">-</button></li>')
+        
+        
+
+        },
+        401: function () {
+          alert("You must be logged in to add namespace.");
+        },
+        400: function () {
+          alert("Invalid namespace.");
+        },
+      },
+      url: "https://prefix.chemskos.com/api/?/" + last,
+      dataType: 'json',
+      headers: {
+        'Authorization': 'Bearer ' + $.cookie('access-token'),
+        'Server': $.cookie('server')
+      },
+      data: JSON.stringify({ namespace: $("#txt-namespace").val() })
+    })
+}
+  }
+
+
+var clickedarray;
+
+    $.ajax({
+      method: "GET",
+      statusCode: {
+        200: function (data, textStatus, request) {
+
+
+          if (data['@graph'].length > 1) {
+            data['@graph'].splice(-1,1)
+
+      var plus =
+        $.each(data['@graph'], function (index, value) {
+
+
+          result += "<li>" + value['pres:namespace'] + " <button data-value=" + value['pres:namespace'] + ' class="plus">+</button> <button data-value="' + value['pres:namespace'] + '" class="minus">-</button></li>'
+        });
+
+
+var clicked=request.getResponseHeader('Link');
+if(clicked!=null){
+clickedarray = clicked.split(',');
+}
+        }
+
+
+    
+    
+     else {
+      result += "Not found"
+    }
+
+    result += '</ul><div id="addnamespace"><a onclick="showform();">Add alternative namespace</a></div><div id="formats"><ul><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/turtle">Turtle</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/rdf/xml">RDF/XML</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/rdfa">RDFa</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/sparql">SPARQL</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/json-ld">JSON-LD</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/csv">CSV</a></li><li><a href="https://prefix.chemskos.com/api/?/'+last+'/formats/tsv">TSV</a></li></ul></div>'
+    $("#app").html(result)
+    $('li button').on('click', vote)
+
+
+
+
+
+
+
+        $.each(clickedarray, function (index, value) {
+          var clickedlink=value.substring(value.lastIndexOf("<")+1,value.lastIndexOf(">"));
+          var type = value.substr(value.indexOf('data-type="') + 11,1)
+
+
+          if(type=='+')
+          {
+            $('.plus[data-value="'+clickedlink+'"]').addClass( "clicked" );
+            $('.plus').not('.clicked').addClass( "blockedall" );
+            blockedpluses=true;
+            $('.minus[data-value="'+clickedlink+'"]').hide();
+}
+else{
+            $('.minus[data-value="'+clickedlink+'"]').addClass( "clicked" );
+            // $('.plus[data-value="'+clickedlink+'"]').hide();
+            $('.plus[data-value="'+clickedlink+'"]').addClass( "blocked" );
+}
+          })
+
+
+
+
+
+
+
+
+
+    
+            },
+        404: function () {
+          result += '<span id="brak">No namespaces added</span>'
+      result += '</ul><div id="addnamespace"><a onclick="showform();">Add alternative namespace</a></div>'
+
+      $("#app").html(result)
+
+        }
+      },
+      url: "https://prefix.chemskos.com/api/?/" + last,
+      dataType: 'json',
+      headers: {
+        'Authorization': 'Bearer ' + $.cookie('access-token'),
+        'Server': $.cookie('server')
+      },
+    })
+
+
+
+  // if ($.cookie('access-token') != null && $.cookie('server') != null) {
+  //   $.ajax({
+  //     method: "PATCH",
+  //     url: "http://localhost/api/?/" + last,
+  //     headers: {
+  //       'Authorization': 'Bearer ' + $.cookie('access-token'),
+  //       'Server': $.cookie('server')
+  //     }
+  //   })
+  //     .done(function (msg) {
+  //       // $('.plus').attr('class', 'minus');
+  //       // $(this).parent().attr('class', 'minus')
+
+
+  //       $('*[data-value="' + msg + '"]').html('-')
+  //       $('*[data-value="' + msg + '"]').attr('class', 'minus');
+
+  //       $(".plus").hide();
+  //     })
+  // }
+
+</script>
+
+
+
+</body>
+
+</html>
